@@ -1,10 +1,31 @@
-from pydantic import BaseModel
+"""Models describing planner output: search tasks and plans.
 
-# Define structured output for each search time
+`SearchTask` represents a single planned search and its rationale.
+`SearchPlan` aggregates multiple `SearchTask` items returned by the
+search planner agent.
+"""
+
+from pydantic import BaseModel, Field
+from typing import List
+
+
 class SearchTask(BaseModel):
-  reason: str # Why this particular search matters
-  query: str  # The actual web search string
+  """A single search task produced by the planner.
 
-# The full output schema from the planner
+  Attributes:
+    reason: Explanation why this search is relevant.
+    query: The web search query string to run.
+  """
+
+  reason: str = Field(..., description="Why this particular search matters")
+  query: str = Field(..., description="The actual web search string")
+
+
 class SearchPlan(BaseModel):
-  searches: list[SearchTask]
+  """Collection of planned `SearchTask` instances.
+
+  Attributes:
+    searches: List of `SearchTask` items.
+  """
+
+  searches: List[SearchTask]

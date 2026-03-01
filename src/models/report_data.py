@@ -1,12 +1,23 @@
-from pydantic import BaseModel
+"""Data models for generated reports.
+
+This module defines `ReportData`, the structured output produced by the
+report generation agent. Fields are annotated with types so downstream
+components can rely on schema validation.
+"""
+
+from pydantic import BaseModel, Field
 from typing import List
 
+
 class ReportData(BaseModel):
-  """A short 2-3 sentence summary of the findings"""
-  short_summary: str
+  """Structured report data produced by the writer agent.
 
-  """The final report"""
-  markdown_report: str
+  Attributes:
+    short_summary: A 2-3 sentence summary of the main findings.
+    markdown_report: The final report in markdown format.
+    follow_up_questions: Suggested follow-up research topics.
+  """
 
-  follow_up_questions: List[str]
-  """Suggested topics to research further"""
+  short_summary: str = Field(..., description="A short 2-3 sentence summary of the findings")
+  markdown_report: str = Field(..., description="The final report in markdown format")
+  follow_up_questions: List[str] = Field(default_factory=list, description="Suggested topics to research further")
