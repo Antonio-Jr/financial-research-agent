@@ -52,6 +52,51 @@ the pipeline.
 
 ---
 
+## Flow Diagram
+
+```mermaid
+flowchart TD
+  A[User input: query + optional email] --> B[SearchPlannerTask]
+  B -->|produces| C[SearchPlan]
+  C --> D[WebSearcherTask]
+  D -->|collects summaries| E[search_results]
+  E --> F[ReportGeneratorTask]
+  F -->|produces| G[ReportData]
+  G --> H[Optional EmailSenderTask]
+  H --> I[SendGrid / Email delivered]
+  G --> J[Gradio UI: displays markdown report]
+```
+
+The diagram shows how `SearchPlannerTask` generates a `SearchPlan` that
+the `WebSearcherTask` consumes; results flow into the `ReportGeneratorTask`
+and finally reach the UI or the optional email sender.
+
+---
+
+## Tech Stack
+
+- Python 3.12+
+- Pydantic v2 for data validation and schemas
+- Gradio for a minimal interactive UI
+- OpenAI SDK (or compatible LLM backends) for language model calls
+- LangChain community tools (DuckDuckGo wrapper) for web search
+- SendGrid for email delivery
+- `uv` used as the package manager in the development workflow
+
+---
+
+## What makes this project different
+
+Rather than delegating orchestration entirely to a higher-level framework
+(e.g. CrewAI), this repository implements a custom pipeline orchestrator
+(`src/core/pipeline.py`) and small, composable primitives (agents,
+runners, tasks, tools). This demonstrates that you understand the pieces
+"under the hood": prompt orchestration, tool integration, typed
+interfaces, and streaming progress updates. The custom approach keeps the
+control plane explicit, easier to reason about, and simpler to adapt for
+experimentation—valuable for prototyping research workflows and for
+demonstrating engineering judgment.
+
 ## Robustness & Quality
 
 This repository emphasizes clarity and learning-focused best practices:
