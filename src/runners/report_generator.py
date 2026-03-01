@@ -6,6 +6,8 @@ from src.agents.report_generator import ReportGeneratorAgent
 
 
 class ReportGeneratorRunner(BaseRunner[ReportGeneratorAgent, ReportData]):
+  agent_class = ReportGeneratorAgent
+
   @classmethod
   async def run(cls, user_query: str, search_summaries: List[str]) -> ReportData:
     """Use the WriterAgent to compile a structured, markdown-based research report"""
