@@ -1,8 +1,11 @@
 from typing import List
+import logging
 
 from src.core.base_runner import BaseRunner
 from src.models.report_data import ReportData
 from src.agents.report_generator import ReportGeneratorAgent
+
+logger = logging.getLogger(__name__)
 
 
 class ReportGeneratorRunner(BaseRunner[ReportGeneratorAgent, ReportData]):
@@ -11,9 +14,9 @@ class ReportGeneratorRunner(BaseRunner[ReportGeneratorAgent, ReportData]):
   @classmethod
   async def run(cls, user_query: str, search_summaries: List[str]) -> ReportData:
     """Use the WriterAgent to compile a structured, markdown-based research report"""
-    print("Thinking deeply about the report...")
+    logger.info("Thinking deeply about the report...")
     prompt_input = f"Original query: {user_query}\nSummarized search results: {search_summaries}"
     result = await cls.execute(prompt_input)
-    print("Finished writing the report!")
+    logger.info("Finished writing the report!")
 
     return result
