@@ -70,7 +70,7 @@ def main():
     and wires the `run_research` coroutine to a button click handler.
     """
     with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald")) as ui:
-        gr.Markdown("F📊 Financial Researcher Tool")
+        gr.Markdown("📊 Financial Researcher Tool")
         gr.Markdown("Leverage AI Agents to perform deep market research and receive reports via email.")
 
         with gr.Column():
