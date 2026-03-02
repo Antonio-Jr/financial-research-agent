@@ -25,7 +25,7 @@ from typing import cast
 
 from email_validator import EmailNotValidError, validate_email
 
-from models.report_data import ReportData
+from src.models.report_data import ReportData
 from src.models.research_context import ResearchContext
 from src.runners.email_sender import EmailSenderRunner
 from src.services.tasks.base import BaseTask
