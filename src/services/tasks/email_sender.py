@@ -20,7 +20,8 @@ Operational note:
   runtime environment so `EmailSenderRunner` can deliver messages.
 """
 
-from typing import AsyncGenerator, cast
+from collections.abc import AsyncGenerator
+from typing import cast
 
 from email_validator import EmailNotValidError, validate_email
 

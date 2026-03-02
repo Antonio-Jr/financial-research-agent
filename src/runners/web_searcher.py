@@ -7,8 +7,9 @@ the results.
 
 import asyncio
 import logging
-from src.core.base_runner import BaseRunner
+
 from src.agents.web_searcher import WebSearcherAgent
+from src.core.base_runner import BaseRunner
 from src.models.search_planner import SearchPlan, SearchTask
 
 logger = logging.getLogger(__name__)

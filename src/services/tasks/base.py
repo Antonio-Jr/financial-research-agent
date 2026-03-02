@@ -6,7 +6,7 @@ pipeline tasks must implement. Implementations should provide an
 """
 
 from abc import ABC, abstractmethod
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 from src.models.research_context import ResearchContext
 

@@ -4,10 +4,10 @@ This task is implemented as an asynchronous generator that yields
 progress messages during long-running operations.
 """
 
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
-from src.runners.report_generator import ReportGeneratorRunner
 from src.models.research_context import ResearchContext
+from src.runners.report_generator import ReportGeneratorRunner
 from src.services.tasks.base import BaseTask
 
 

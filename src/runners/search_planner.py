@@ -8,11 +8,10 @@ instructions and invokes the `SearchPlannerAgent` to produce a
 
 import logging
 
-from src.prompts.search_planner import PLANNER_PROMPT
+from src.agents.search_planner import SearchPlannerAgent
 from src.core.base_runner import BaseRunner
 from src.models.search_planner import SearchPlan
-from src.agents.search_planner import SearchPlannerAgent
-
+from src.prompts.search_planner import PLANNER_PROMPT
 
 logger = logging.getLogger(__name__)
 

@@ -17,13 +17,13 @@ Important behaviour notes:
 
 import gradio as gr
 
+from src.core.logging_config import setup_logging
 from src.core.pipeline import ResearchPipeline
+from src.services.report_manager import ReportManager
 from src.services.tasks.email_sender import EmailSenderTask
 from src.services.tasks.report_generator import ReportGeneratorTask
 from src.services.tasks.search_planner import SearchPlannerTask
 from src.services.tasks.web_searcher import WebSearcherTask
-from src.core.logging_config import setup_logging
-from src.services.report_manager import ReportManager
 
 
 async def run_research(query: str, email: str, max_sources: int = 3):
@@ -50,7 +50,7 @@ async def run_research(query: str, email: str, max_sources: int = 3):
     if not query.strip():
         yield "⚠️ Please enter a research query."
         return
-    
+
     tasks_catalog = [
         SearchPlannerTask(),
         WebSearcherTask(),

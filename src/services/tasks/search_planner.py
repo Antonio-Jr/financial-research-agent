@@ -5,7 +5,7 @@
 while executing.
 """
 
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 from src.runners.search_planner import SearchPlannerRunner
 from src.services.tasks.base import BaseTask

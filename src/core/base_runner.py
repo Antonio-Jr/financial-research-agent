@@ -5,12 +5,13 @@ orchestration helper. Concrete runners should set `agent_class` to the
 appropriate agent implementation and call `execute` to run the agent.
 """
 
-from typing import Type
+
 from agents import Runner
 from src.core.base_agent import BaseAgent
 
+
 class BaseRunner[T: BaseAgent, R]:
-  agent_class: Type[T]
+  agent_class: type[T]
 
   @classmethod
   async def execute(cls, input_data: str, **agent_kwargs) -> R:

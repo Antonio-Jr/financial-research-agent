@@ -5,8 +5,8 @@
 search planner agent.
 """
 
+
 from pydantic import BaseModel, Field
-from typing import List
 
 
 class SearchTask(BaseModel):
@@ -28,4 +28,4 @@ class SearchPlan(BaseModel):
     searches: List of `SearchTask` items.
   """
 
-  searches: List[SearchTask]
+  searches: list[SearchTask]

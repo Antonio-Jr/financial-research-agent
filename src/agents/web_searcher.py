@@ -6,10 +6,10 @@ agent is set up with the research prompt, the web search tool and
 deterministic model settings.
 """
 
+from agents import ModelSettings
 from src.core.base_agent import BaseAgent
 from src.prompts.web_searcher import RESEARCH_PROMPT
 from src.tools.web_searcher import web_search
-from agents import ModelSettings
 
 
 class WebSearcherAgent(BaseAgent):

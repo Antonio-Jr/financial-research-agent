@@ -5,7 +5,6 @@ by Pydantic. It contains the original query, optional email, the
 search plan, collected search summaries, and the final report object.
 """
 
-from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -27,10 +26,10 @@ class ResearchContext(BaseModel):
 
     query: str
     max_sources: int = 3
-    email: Optional[str] = None
-    search_plan: Optional[SearchPlan] = None
-    search_results: List[str] = Field(default_factory=list)
-    final_report: Optional[ReportData] = None
+    email: str | None = None
+    search_plan: SearchPlan | None = None
+    search_results: list[str] = Field(default_factory=list)
+    final_report: ReportData | None = None
 
     class Config:
         arbitrary_types_allowed = True

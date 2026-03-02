@@ -2,6 +2,7 @@ import logging
 import logging.config
 import sys
 
+
 def setup_logging(default_level=logging.INFO):
     """
     Centralized logging configuration for the entire application.

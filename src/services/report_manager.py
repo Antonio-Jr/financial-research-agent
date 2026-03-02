@@ -30,11 +30,11 @@ async for update in manager.execute("my query"):
 ```
 """
 
-from typing import AsyncGenerator, List
+from collections.abc import AsyncGenerator
 
-from src.services.tasks.base import BaseTask
-from src.models.research_context import ResearchContext
 from src.core.pipeline import ResearchPipeline
+from src.models.research_context import ResearchContext
+from src.services.tasks.base import BaseTask
 
 
 class ReportManager:
@@ -46,7 +46,7 @@ class ReportManager:
     streams progress messages produced by each task.
     """
 
-    def __init__(self, pipeline: ResearchPipeline, tasks: List[BaseTask]) -> None:
+    def __init__(self, pipeline: ResearchPipeline, tasks: list[BaseTask]) -> None:
         self.pipeline = pipeline
         self.tasks = tasks
 

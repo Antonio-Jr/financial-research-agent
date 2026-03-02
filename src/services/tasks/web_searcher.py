@@ -5,7 +5,7 @@ in the pipeline context and stores the collected summaries back into
 the context. Progress messages are yielded during execution.
 """
 
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 from src.models.research_context import ResearchContext
 from src.runners.web_searcher import WebSearcherRunner
@@ -32,6 +32,6 @@ class WebSearcherTask(BaseTask):
          yield "Search plan is missing..."
          return
 
-      yield f"🌐 Searching for sources in parallel"
+      yield "🌐 Searching for sources in parallel"
       context.search_results = await WebSearcherRunner.run(search_plan=context.search_plan)
       yield f"✅ Collected {len(context.search_results)} summaries from sources."

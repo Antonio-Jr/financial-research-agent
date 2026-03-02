@@ -6,9 +6,11 @@ with configuration taken from the project's settings.
 """
 
 import logging
+
 import sendgrid
+from sendgrid.helpers.mail import Content, Email, Mail, To
+
 from agents import function_tool
-from sendgrid.helpers.mail import Email, To, Content, Mail
 from src.config import settings
 
 logger = logging.getLogger(__name__)

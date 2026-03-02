@@ -5,8 +5,9 @@ LangChain Community `DuckDuckGoSearchRun` tool, decorated as a
 project `function_tool` for use by agents.
 """
 
-from agents import function_tool
 from langchain_community.tools import DuckDuckGoSearchRun
+
+from agents import function_tool
 
 
 @function_tool

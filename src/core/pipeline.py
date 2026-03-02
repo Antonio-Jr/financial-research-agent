@@ -10,10 +10,11 @@ tasks when the condition is not satisfied.
 """
 
 import logging
-from typing import AsyncGenerator, List, Self
-from src.services.tasks.base import BaseTask
-from src.models.research_context import ResearchContext
+from collections.abc import AsyncGenerator
+from typing import Self
 
+from src.models.research_context import ResearchContext
+from src.services.tasks.base import BaseTask
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ class ResearchPipeline:
         The `context` must be set via `set_context` before calling
         `run`.
         """
-        self.tasks: List[BaseTask] = []
+        self.tasks: list[BaseTask] = []
         self.context: ResearchContext
 
     def set_context(self, context: ResearchContext) -> Self:
@@ -73,4 +74,3 @@ class ResearchPipeline:
 
             async for update in task.execute(self.context):
                 yield update
-    

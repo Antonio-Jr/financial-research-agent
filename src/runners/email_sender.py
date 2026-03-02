@@ -5,12 +5,11 @@ that formats the email payload and delegates sending to the
 `BaseRunner.execute` helper.
 """
 
-from typing import Union
 import logging
+
+from src.agents.email_sender import EmailSenderAgent
 from src.core.base_runner import BaseRunner
 from src.models.report_data import ReportData
-from src.agents.email_sender import EmailSenderAgent
-
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +25,7 @@ class EmailSenderRunner(BaseRunner[EmailSenderAgent, ReportData]):
     agent_class = EmailSenderAgent
 
     @classmethod
-    async def run(cls, report: ReportData, email: Union[str, None]):
+    async def run(cls, report: ReportData, email: str | None):
         """Send the formatted `report` to `email` using the agent.
 
         Args:
