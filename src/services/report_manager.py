@@ -1,57 +1,87 @@
 """High-level orchestration for report generation.
 
-`ReportManager` exposes a simple static `execute` coroutine that builds
-and runs the research pipeline for a given `query`. It yields progress
-updates produced by pipeline tasks and finally yields the markdown
-report when available.
+`ReportManager` is a small dependency-injection friendly orchestrator
+that composes a `ResearchPipeline` with a pre-defined ordered list of
+`BaseTask` instances. The manager is intentionally minimal: it
+attaches a `ResearchContext` to the pipeline, registers the provided
+tasks (in order) and streams progress messages produced by each task.
+
+This module focuses on clarity for reviewers and consumers of the
+project — the manager does not make implicit decisions about which
+tasks to run (for example, it will not add an email-sending task
+automatically based on the presence of an `email` argument). To enable
+conditional execution, implement `should_run()` on individual tasks or
+manage the `tasks` list before constructing `ReportManager`.
+
+Usage example:
+
+```py
+from src.core.pipeline import ResearchPipeline
+from src.services.tasks.search_planner import SearchPlannerTask
+from src.services.tasks.web_searcher import WebSearcherTask
+from src.services.tasks.report_generator import ReportGeneratorTask
+
+pipeline = ResearchPipeline()
+tasks = [SearchPlannerTask(), WebSearcherTask(), ReportGeneratorTask()]
+manager = ReportManager(pipeline=pipeline, tasks=tasks)
+
+async for update in manager.execute("my query"):
+    print(update)
+```
 """
 
-from src.services.tasks.report_generator import ReportGeneratorTask
-from src.services.tasks.web_searcher import WebSearcherTask
-from src.services.tasks.email_sender import EmailSenderTask
+from typing import AsyncGenerator, List
+
+from src.services.tasks.base import BaseTask
 from src.models.research_context import ResearchContext
-from src.services.tasks.search_planner import SearchPlannerTask
 from src.core.pipeline import ResearchPipeline
 
 
 class ReportManager:
-    """Manager that orchestrates the research pipeline.
+    """Manager that orchestrates the research pipeline using DI.
 
-    The static `execute` coroutine builds a `ResearchPipeline` with the
-    necessary tasks (planner, web searcher, report generator) and
-    optionally the email sender. It yields progress messages from the
-    pipeline and finally the generated report content.
+    Construct this manager with a concrete `ResearchPipeline` and the
+    sequence of `BaseTask` instances to execute. The instance method
+    `execute` sets the pipeline context, registers the tasks and then
+    streams progress messages produced by each task.
     """
 
-    @staticmethod
-    async def execute(query: str, email: str = "", max_sources: int = 3):
-        """Run the research pipeline and stream progress updates.
+    def __init__(self, pipeline: ResearchPipeline, tasks: List[BaseTask]) -> None:
+        self.pipeline = pipeline
+        self.tasks = tasks
+
+    async def execute(self, query: str, email: str = "", max_sources: int = 3) -> AsyncGenerator[str, None]:
+        """Run the configured pipeline and stream progress updates.
+
+        This instance method creates a `ResearchContext` for the provided
+        `query` and optional `email`, attaches it to the pipeline and
+        registers the `tasks` that were supplied when the manager was
+        constructed. The method yields progress messages produced by the
+        tasks and finally the markdown report when available.
+
+        Note: `ReportManager` does not implicitly add tasks based on
+        the `email` argument. If you want an email to be sent include an
+        `EmailSenderTask` instance in the `tasks` list when constructing
+        the manager.
 
         Args:
             query: The user's research query.
-            email: Optional recipient email address; when provided the
-                pipeline will include the email sending task.
+            email: Optional recipient email address (stored in the
+                context for tasks that need it).
             max_sources: Maximum number of sources to request from the
                 planner.
 
         Yields:
-            Progress messages (strings) produced by pipeline tasks and
-            finally the markdown report string when generation completes.
+            Progress messages (strings) from pipeline tasks and finally
+            the markdown report when available.
         """
-        context = ResearchContext(
-          query=query, email=email, max_sources=max_sources)
-        pipeline = (
-            ResearchPipeline()
-            .set_context(context)
-            .add_task(SearchPlannerTask())
-            .add_task(WebSearcherTask())
-            .add_task(ReportGeneratorTask())
-        )
+        context = ResearchContext(query=query, email=email, max_sources=max_sources)
+        self.pipeline.set_context(context)
 
-        if email:
-            pipeline.add_task(EmailSenderTask())
+        for task in self.tasks:
+            self.pipeline.add_task(task)
 
-        async for update in pipeline.run():
+        async for update in self.pipeline.run():
             yield update
 
         if context.final_report:

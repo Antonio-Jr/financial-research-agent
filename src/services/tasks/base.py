@@ -8,22 +8,39 @@ pipeline tasks must implement. Implementations should provide an
 from abc import ABC, abstractmethod
 from typing import AsyncGenerator
 
+from src.models.research_context import ResearchContext
+
 
 class BaseTask(ABC):
-  """Abstract base for pipeline tasks.
+    """Abstract base class for pipeline tasks.
 
-  Concrete tasks must implement `execute(self, context)` and yield
-  progress messages as an asynchronous generator of strings.
-  """
+    Implementations should provide an `execute(self, context)` method that
+    may be an asynchronous generator yielding progress messages (strings).
 
-  @abstractmethod
-  def execute(self, context) -> AsyncGenerator[str, None]:
-    """Execute the task using `context` and yield progress updates.
-
-    Args:
-      context: The pipeline's shared context object.
-
-    Yields:
-      Progress messages as strings.
+    Optionally override `should_run(self, context)` to make task
+    execution conditional on the pipeline context.
     """
-    pass
+
+    @abstractmethod
+    def execute(self, context) -> AsyncGenerator[str, None]:
+        """Run the task using the provided `context` and yield updates.
+
+        Implementations may perform I/O-bound operations and yield human-
+        readable progress strings that are forwarded by the pipeline.
+
+        Args:
+            context: Shared `ResearchContext` instance used across tasks.
+
+        Yields:
+            Progress messages as strings.
+        """
+        pass
+
+    def should_run(self, context: ResearchContext) -> bool:
+        """Return True when the task should run for the given context.
+
+        The default implementation always returns True. Subclasses can
+        override this method to skip execution based on context state
+        (for example, skip emailing when no recipient is configured).
+        """
+        return True

@@ -1,15 +1,21 @@
 """Lightweight research pipeline for executing ordered tasks.
 
-The pipeline holds a shared `ResearchContext` and a sequence of
-`BaseTask` instances. Tasks are executed sequentially and may yield
-progress updates which are forwarded by the pipeline's async
-generator.
+This module provides `ResearchPipeline`, a minimal orchestrator that
+runs an ordered list of `BaseTask` instances against a shared
+`ResearchContext`. Tasks are executed sequentially and may yield
+progress updates which are forwarded by the pipeline's asynchronous
+generator. Tasks may opt out of execution by implementing
+`BaseTask.should_run(context) -> bool`; the pipeline will log and skip
+tasks when the condition is not satisfied.
 """
 
+import logging
 from typing import AsyncGenerator, List, Self
 from src.services.tasks.base import BaseTask
 from src.models.research_context import ResearchContext
 
+
+logger = logging.getLogger(__name__)
 
 class ResearchPipeline:
     """Container that runs pipeline tasks against a shared context.
@@ -55,8 +61,16 @@ class ResearchPipeline:
         """
         if not hasattr(self, "context") or self.context is None:
             raise ValueError("Context must be set before running the pipeline.")
-
         for task in self.tasks:
+            # Allow tasks to opt out of execution based on the current
+            # context. When `should_run` returns False the pipeline will
+            # log the decision and continue to the next task.
+            if not task.should_run(self.context):
+                logger.info(
+                    "Task %s skipped (condition not satisfied).", task.__class__.__name__
+                )
+                continue
+
             async for update in task.execute(self.context):
                 yield update
     
