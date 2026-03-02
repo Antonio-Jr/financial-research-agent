@@ -1,14 +1,28 @@
-"""Small Gradio UI entrypoint for the financial research tool.
+"""Gradio UI entrypoint for the Financial Research Agent.
 
-This module exposes a minimal Gradio-based user interface that
-accepts a research query and optional recipient email, runs the
-project's research pipeline and streams progress updates to the
-interface. The `run_research` coroutine bridges the pipeline's
-asynchronous generator with Gradio's callback mechanism.
+This module provides a small Gradio-based interface that accepts a
+research query, optional recipient email and a maximum source count.
+It composes a list of pipeline `tasks`, constructs a `ReportManager`
+with a fresh `ResearchPipeline` and streams progress messages back to
+the UI as the pipeline executes.
+
+Important behaviour notes:
+- The `tasks_catalog` explicitly includes an `EmailSenderTask` entry.
+    The task itself is responsible for deciding whether to run (it may
+    skip execution if no recipient is present in the context). Thus the
+    manager is explicit about which tasks to run while allowing tasks to
+    be conditional.
 """
+
+from typing import Sequence
 
 import gradio as gr
 
+from src.core.pipeline import ResearchPipeline
+from src.services.tasks.email_sender import EmailSenderTask
+from src.services.tasks.report_generator import ReportGeneratorTask
+from src.services.tasks.search_planner import SearchPlannerTask
+from src.services.tasks.web_searcher import WebSearcherTask
 from src.core.logging_config import setup_logging
 from src.services.report_manager import ReportManager
 
@@ -16,9 +30,15 @@ from src.services.report_manager import ReportManager
 async def run_research(query: str, email: str, max_sources: int = 3):
     """Bridge between Gradio inputs and the research pipeline.
 
-    This coroutine validates the `query` input and then consumes the
-    asynchronous generator returned by `ReportManager.execute`, yielding
-    each progress block so Gradio can display live updates.
+    This coroutine validates the `query` input, assembles the ordered
+    `tasks_catalog` and constructs a `ReportManager` (dependency-injected
+    with a new `ResearchPipeline`). It then consumes the asynchronous
+    generator returned by `ReportManager.execute`, yielding each block
+    so Gradio can display live progress and the final markdown report.
+
+    The `EmailSenderTask` is included in `tasks_catalog`, but the task
+    will skip sending if no recipient email is provided. This keeps the
+    UI simple while ensuring task-level control of side-effects.
 
     Args:
         query: The user's research query string.
@@ -31,8 +51,17 @@ async def run_research(query: str, email: str, max_sources: int = 3):
     if not query.strip():
         yield "⚠️ Please enter a research query."
         return
+    
+    tasks_catalog = [
+        SearchPlannerTask(),
+        WebSearcherTask(),
+        ReportGeneratorTask(),
+        EmailSenderTask()
+    ]
 
-    async for block in ReportManager.execute(query, email, max_sources):
+    manager = ReportManager(pipeline=ResearchPipeline(), tasks=tasks_catalog)
+
+    async for block in manager.execute(query, email, max_sources):
         yield block
 
 
