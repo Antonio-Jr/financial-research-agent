@@ -24,6 +24,3 @@ class ReportGeneratorAgent(BaseAgent):
         kwargs.setdefault("output_type", ReportData)
 
         super().__init__(**kwargs)
-
-
-

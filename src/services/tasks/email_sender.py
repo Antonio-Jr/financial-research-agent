@@ -32,45 +32,43 @@ from src.services.tasks.base import BaseTask
 
 
 class EmailSenderTask(BaseTask):
-  """Pipeline task responsible for sending the final report by email.
+    """Pipeline task responsible for sending the final report by email.
 
-  Behavior:
-    - `should_run` performs a lightweight syntactic validation of
-      `context.email` and returns False when the value is missing or
-      invalid.
-    - `execute` yields an informational message and returns early if
-      there is no recipient or no report; otherwise it delegates to
-      `EmailSenderRunner.run` which performs the actual send.
-  """
-
-  def should_run(self, context: ResearchContext) -> bool:
-    """Return True when the task should attempt to send an email.
-
-    This method only checks presence and syntactic validity of the
-    email address. Deliverability checks are intentionally disabled.
+    Behavior:
+      - `should_run` performs a lightweight syntactic validation of
+        `context.email` and returns False when the value is missing or
+        invalid.
+      - `execute` yields an informational message and returns early if
+        there is no recipient or no report; otherwise it delegates to
+        `EmailSenderRunner.run` which performs the actual send.
     """
-    if not context or not context.email or not context.final_report:
-      return False
 
-    try:
-      validate_email(context.email, check_deliverability=False)
-      return True
-    except EmailNotValidError:
-      return False
+    def should_run(self, context: ResearchContext) -> bool:
+        """Return True when the task should attempt to send an email.
 
+        This method only checks presence and syntactic validity of the
+        email address. Deliverability checks are intentionally disabled.
+        """
+        if not context or not context.email or not context.final_report:
+            return False
 
-  async def execute(self, context: ResearchContext) -> AsyncGenerator[str, None]:
-    """Run the email sending step using the provided `ResearchContext`.
+        try:
+            validate_email(context.email, check_deliverability=False)
+            return True
+        except EmailNotValidError:
+            return False
 
-    The method assumes the pipeline has already invoked `should_run` and
-    that `context.final_report` is a `ReportData` instance. For the
-    benefit of static type checkers we cast the value before calling
-    the runner.
+    async def execute(self, context: ResearchContext) -> AsyncGenerator[str, None]:
+        """Run the email sending step using the provided `ResearchContext`.
 
-    Yields:
-      Human-readable progress messages suitable for UI streaming.
-    """
-    yield "Stating Email Runner..."
-    report = cast(ReportData, context.final_report)
-    await EmailSenderRunner.run(report, email=context.email)
+        The method assumes the pipeline has already invoked `should_run` and
+        that `context.final_report` is a `ReportData` instance. For the
+        benefit of static type checkers we cast the value before calling
+        the runner.
 
+        Yields:
+          Human-readable progress messages suitable for UI streaming.
+        """
+        yield "Stating Email Runner..."
+        report = cast(ReportData, context.final_report)
+        await EmailSenderRunner.run(report, email=context.email)

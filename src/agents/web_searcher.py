@@ -13,21 +13,21 @@ from src.tools.web_searcher import web_search
 
 
 class WebSearcherAgent(BaseAgent):
-  """Agent that performs web research and returns search summaries.
+    """Agent that performs web research and returns search summaries.
 
-  Defaults:
-    - name: "Web Research Agent"
-    - instructions: `RESEARCH_PROMPT`
-    - tools: `[web_search]`
-    - model_settings: deterministic (`temperature=0`) and requires tool usage
-  """
+    Defaults:
+      - name: "Web Research Agent"
+      - instructions: `RESEARCH_PROMPT`
+      - tools: `[web_search]`
+      - model_settings: deterministic (`temperature=0`) and requires tool usage
+    """
 
-  def __init__(self, **kwargs):
-    kwargs.setdefault("name", "Web Research Agent")
-    kwargs.setdefault("instructions", RESEARCH_PROMPT)
-    kwargs.setdefault("tools", [web_search])
-    kwargs.setdefault(
-      "model_settings", ModelSettings(temperature=0, tool_choice="required")
-    )
+    def __init__(self, **kwargs):
+        kwargs.setdefault("name", "Web Research Agent")
+        kwargs.setdefault("instructions", RESEARCH_PROMPT)
+        kwargs.setdefault("tools", [web_search])
+        kwargs.setdefault(
+            "model_settings", ModelSettings(temperature=0, tool_choice="required")
+        )
 
-    super().__init__(**kwargs)
+        super().__init__(**kwargs)

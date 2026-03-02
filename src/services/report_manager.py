@@ -50,7 +50,9 @@ class ReportManager:
         self.pipeline = pipeline
         self.tasks = tasks
 
-    async def execute(self, query: str, email: str = "", max_sources: int = 3) -> AsyncGenerator[str, None]:
+    async def execute(
+        self, query: str, email: str = "", max_sources: int = 3
+    ) -> AsyncGenerator[str, None]:
         """Run the configured pipeline and stream progress updates.
 
         This instance method creates a `ResearchContext` for the provided

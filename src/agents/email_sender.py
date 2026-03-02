@@ -1,4 +1,3 @@
-
 """Email sender agent.
 
 This module exposes `EmailSenderAgent`, a small wrapper around

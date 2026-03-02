@@ -14,7 +14,6 @@ Important behaviour notes:
     be conditional.
 """
 
-
 import gradio as gr
 
 from src.core.logging_config import setup_logging
@@ -55,7 +54,7 @@ async def run_research(query: str, email: str, max_sources: int = 3):
         SearchPlannerTask(),
         WebSearcherTask(),
         ReportGeneratorTask(),
-        EmailSenderTask()
+        EmailSenderTask(),
     ]
 
     manager = ReportManager(pipeline=ResearchPipeline(), tasks=tasks_catalog)

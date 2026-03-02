@@ -18,6 +18,7 @@ from src.services.tasks.base import BaseTask
 
 logger = logging.getLogger(__name__)
 
+
 class ResearchPipeline:
     """Container that runs pipeline tasks against a shared context.
 
@@ -68,7 +69,8 @@ class ResearchPipeline:
             # log the decision and continue to the next task.
             if not task.should_run(self.context):
                 logger.info(
-                    "Task %s skipped (condition not satisfied).", task.__class__.__name__
+                    "Task %s skipped (condition not satisfied).",
+                    task.__class__.__name__,
                 )
                 continue
 

@@ -38,7 +38,9 @@ class WebSearcherRunner(BaseRunner[WebSearcherAgent, str]):
         """
         logger.info("Performing Parallel Searching...")
 
-        tasks = [asyncio.create_task(cls.__search(task)) for task in search_plan.searches]
+        tasks = [
+            asyncio.create_task(cls.__search(task)) for task in search_plan.searches
+        ]
 
         results = await asyncio.gather(*tasks)
         logger.info("Searches finished.")

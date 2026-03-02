@@ -13,25 +13,27 @@ from src.services.tasks.base import BaseTask
 
 
 class WebSearcherTask(BaseTask):
-   """Pipeline task that performs web searches in parallel.
+    """Pipeline task that performs web searches in parallel.
 
-   The task expects `context.search_plan` to be present and will set
-   `context.search_results` with the returned summaries.
-   """
+    The task expects `context.search_plan` to be present and will set
+    `context.search_results` with the returned summaries.
+    """
 
-   async def execute(self, context: ResearchContext) -> AsyncGenerator[str, None]:
-      """Run the web searches defined in `context.search_plan`.
+    async def execute(self, context: ResearchContext) -> AsyncGenerator[str, None]:
+        """Run the web searches defined in `context.search_plan`.
 
-      Args:
-         context: Pipeline context containing `search_plan`.
+        Args:
+           context: Pipeline context containing `search_plan`.
 
-      Yields:
-         Progress messages as strings.
-      """
-      if not context.search_plan:
-         yield "Search plan is missing..."
-         return
+        Yields:
+           Progress messages as strings.
+        """
+        if not context.search_plan:
+            yield "Search plan is missing..."
+            return
 
-      yield "🌐 Searching for sources in parallel"
-      context.search_results = await WebSearcherRunner.run(search_plan=context.search_plan)
-      yield f"✅ Collected {len(context.search_results)} summaries from sources."
+        yield "🌐 Searching for sources in parallel"
+        context.search_results = await WebSearcherRunner.run(
+            search_plan=context.search_plan
+        )
+        yield f"✅ Collected {len(context.search_results)} summaries from sources."

@@ -14,29 +14,29 @@ logger = logging.getLogger(__name__)
 
 
 class ReportGeneratorRunner(BaseRunner[ReportGeneratorAgent, ReportData]):
-  """Runner that composes agent input and returns a `ReportData`.
+    """Runner that composes agent input and returns a `ReportData`.
 
-  The `run` method formats a prompt containing the original query and
-  a list of summarized search results, then delegates to
-  `BaseRunner.execute` to obtain the final `ReportData`.
-  """
-
-  agent_class = ReportGeneratorAgent
-
-  @classmethod
-  async def run(cls, user_query: str, search_summaries: list[str]) -> ReportData:
-    """Generate a report from the user query and search summaries.
-
-    Args:
-      user_query: The original user query string.
-      search_summaries: A list of short summaries from web searches.
-
-    Returns:
-      A `ReportData` instance containing the generated report.
+    The `run` method formats a prompt containing the original query and
+    a list of summarized search results, then delegates to
+    `BaseRunner.execute` to obtain the final `ReportData`.
     """
-    logger.info("Thinking deeply about the report...")
-    prompt_input = f"Original query: {user_query}\nSummarized search results: {search_summaries}"
-    result = await cls.execute(prompt_input)
-    logger.info("Finished writing the report!")
 
-    return result
+    agent_class = ReportGeneratorAgent
+
+    @classmethod
+    async def run(cls, user_query: str, search_summaries: list[str]) -> ReportData:
+        """Generate a report from the user query and search summaries.
+
+        Args:
+          user_query: The original user query string.
+          search_summaries: A list of short summaries from web searches.
+
+        Returns:
+          A `ReportData` instance containing the generated report.
+        """
+        logger.info("Thinking deeply about the report...")
+        prompt_input = f"Original query: {user_query}\nSummarized search results: {search_summaries}"
+        result = await cls.execute(prompt_input)
+        logger.info("Finished writing the report!")
+
+        return result

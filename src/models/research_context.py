@@ -5,7 +5,6 @@ by Pydantic. It contains the original query, optional email, the
 search plan, collected search summaries, and the final report object.
 """
 
-
 from pydantic import BaseModel, Field
 
 from src.models.report_data import ReportData
