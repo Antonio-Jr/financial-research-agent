@@ -14,7 +14,6 @@ Important behaviour notes:
     be conditional.
 """
 
-from typing import Sequence
 
 import gradio as gr
 
