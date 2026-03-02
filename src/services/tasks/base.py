@@ -34,7 +34,7 @@ class BaseTask(ABC):
         Yields:
             Progress messages as strings.
         """
-        pass
+        pass  # pragma: no cover
 
     def should_run(self, context: ResearchContext) -> bool:
         """Return True when the task should run for the given context.

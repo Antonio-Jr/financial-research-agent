@@ -106,6 +106,6 @@ def main():
     ui.launch(inbrowser=True)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     setup_logging()
     main()
