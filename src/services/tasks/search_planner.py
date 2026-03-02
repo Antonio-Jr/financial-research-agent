@@ -31,8 +31,6 @@ class SearchPlannerTask(BaseTask):
         """
         yield "🔍 Starting the planning phase..."
 
-        context.search_plan = await SearchPlannerRunner.run(
-            context.query, max_sources=context.max_sources
-        )
+        context.search_plan = await SearchPlannerRunner.run(context.query, max_sources=context.max_sources)
 
         yield f"✅ Planning created with com {len(context.search_plan.searches)} searches."

@@ -33,7 +33,5 @@ class WebSearcherTask(BaseTask):
             return
 
         yield "🌐 Searching for sources in parallel"
-        context.search_results = await WebSearcherRunner.run(
-            search_plan=context.search_plan
-        )
+        context.search_results = await WebSearcherRunner.run(search_plan=context.search_plan)
         yield f"✅ Collected {len(context.search_results)} summaries from sources."

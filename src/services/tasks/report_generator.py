@@ -34,8 +34,6 @@ class ReportGeneratorTask(BaseTask):
 
         yield "✍️ Generating the final report..."
 
-        context.final_report = await ReportGeneratorRunner.run(
-            user_query=context.query, search_summaries=context.search_results
-        )
+        context.final_report = await ReportGeneratorRunner.run(user_query=context.query, search_summaries=context.search_results)
 
         yield "✅ Report generated successfully!"

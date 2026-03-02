@@ -26,8 +26,6 @@ class WebSearcherAgent(BaseAgent):
         kwargs.setdefault("name", "Web Research Agent")
         kwargs.setdefault("instructions", RESEARCH_PROMPT)
         kwargs.setdefault("tools", [web_search])
-        kwargs.setdefault(
-            "model_settings", ModelSettings(temperature=0, tool_choice="required")
-        )
+        kwargs.setdefault("model_settings", ModelSettings(temperature=0, tool_choice="required"))
 
         super().__init__(**kwargs)

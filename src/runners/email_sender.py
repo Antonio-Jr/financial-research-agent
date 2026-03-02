@@ -37,9 +37,7 @@ class EmailSenderRunner(BaseRunner[EmailSenderAgent, ReportData]):
         """
         logger.info("Preparing email...")
 
-        prompt_input = (
-            f"RECIPIENT_EMAIL: {email}\n\nREPORT_CONTENT: \n{report.markdown_report}"
-        )
+        prompt_input = f"RECIPIENT_EMAIL: {email}\n\nREPORT_CONTENT: \n{report.markdown_report}"
 
         result = await cls.execute(prompt_input)
         logger.info("Email sent successfully!")

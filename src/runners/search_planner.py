@@ -38,9 +38,7 @@ class SearchPlannerRunner(BaseRunner[SearchPlannerAgent, SearchPlan]):
         logger.info("Planning for searches...")
         formatted_instructions = PLANNER_PROMPT.format(MAX_SOURCES=max_sources)
 
-        result = await cls.execute(
-            input_data=query, instructions=formatted_instructions
-        )
+        result = await cls.execute(input_data=query, instructions=formatted_instructions)
         logger.info("Will perform %d searches", len(result.searches))
 
         return result

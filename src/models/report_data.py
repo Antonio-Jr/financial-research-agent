@@ -17,10 +17,6 @@ class ReportData(BaseModel):
       follow_up_questions: Suggested follow-up research topics.
     """
 
-    short_summary: str = Field(
-        ..., description="A short 2-3 sentence summary of the findings"
-    )
+    short_summary: str = Field(..., description="A short 2-3 sentence summary of the findings")
     markdown_report: str = Field(..., description="The final report in markdown format")
-    follow_up_questions: list[str] = Field(
-        default_factory=list, description="Suggested topics to research further"
-    )
+    follow_up_questions: list[str] = Field(default_factory=list, description="Suggested topics to research further")

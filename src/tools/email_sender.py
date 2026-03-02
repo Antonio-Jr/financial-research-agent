@@ -51,9 +51,7 @@ def send_email(email_to: str, subject: str, html_body: str):
         logger.debug("Response Headers: %s", getattr(response, "headers", None))
 
         if response.status_code in [200, 201, 202]:
-            logger.info(
-                "SUCCESS: Email sent to %s (status: %s)", email_to, response.status_code
-            )
+            logger.info("SUCCESS: Email sent to %s (status: %s)", email_to, response.status_code)
             return {"status": "Success", "code": response.status_code, "to": email_to}
         else:
             logger.warning(
